@@ -1,10 +1,10 @@
 <template>
   <xmcard-panel
-    label="自来水水质"
+    label="讯盟小程序开发"
     label-pre-bg="rgba(49,181,144,1) linear-gradient(142deg,rgba(255,255,255,0.25) 0%,rgba(255,255,255,0) 100%)"
     :item="{
-      id: '28338153',
-      componentName: 'rivers-quality-28338153'
+      id: 'appid',
+      componentName: 'component-name-appid'
     }"
   >
     <div
@@ -102,7 +102,7 @@ const defaultOp = {
 }
 
 export default {
-  name: 'rivers-quality-28338153',
+  name: 'component-name-appid',
   props: {
     height: {
       type: [String, Number],

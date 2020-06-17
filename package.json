@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name your-card-name src/index.js && node after-build.js && xmmp zip card",
+    "build": "node build.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

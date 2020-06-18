@@ -22,6 +22,7 @@ function doZip (cardName) {
       console.log('🔧 使用 zip 压缩...')
       await mySpawn('zip', ['-qr', `${cardName}.zip`, './'], { cwd: distTmp })
       console.log('🔧 zip 压缩完成，处理收尾...')
+      resolve()
     } else {
       console.log('🔧 使用 jszip 压缩...')
       const winZip = new JSZip()

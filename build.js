@@ -1,17 +1,47 @@
 const fs = require('fs-extra')
 const path = require('path')
 const spawn = require('cross-spawn')
+const JSZip = require('jszip')
 
 const dir = path.resolve(__dirname, 'dist')
 const zip = path.resolve(__dirname, 'zip')
+const distTmp = path.resolve(__dirname, 'dist-tmp')
 const collection = path.resolve(__dirname, 'src', 'card-collection')
+const isMac = process.platform === 'darwin'
 
-build().then(() => {
+build().then(async () => {
+  // 删除 dist-tmp 及 dist
+  await rmDir(dir)
+  await rmDir(distTmp)
   console.log('✅ 处理完成.')
 })
 
+function doZip (cardName) {
+  return new Promise(async (resolve) => {
+    if (isMac) {
+      console.log('🔧 使用 zip 压缩...')
+      await mySpawn('zip', ['-qr', `${cardName}.zip`, './'], { cwd: distTmp })
+      console.log('🔧 zip 压缩完成，处理收尾...')
+    } else {
+      console.log('🔧 使用 jszip 压缩...')
+      const winZip = new JSZip()
+      for (const f of fs.readdirSync(distTmp)) {
+        winZip.file(f, fs.readFileSync(path.resolve(distTmp, f)))
+      }
+      winZip
+        .generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+        .pipe(fs.createWriteStream(path.resolve(distTmp, `${cardName}.zip`)))
+        .on('finish', function () {
+          console.log('🔧 jszip 压缩完成，处理收尾...')
+          resolve()
+        })
+    }
+  })
+}
+
 async function build () {
   fs.ensureDirSync(zip)
+  fs.ensureDirSync(distTmp)
   let collect = []
   const onePkg = process.argv[2]
   if (onePkg) {
@@ -31,19 +61,25 @@ async function build () {
       './node_modules/.bin/vue-cli-service',
       ['build', '--target', 'lib', '--name', cardName, path.resolve(collection, cardName, 'index.js')]
     )
-    // 改为 index.css / index.js
+    // 输出 index.css / index.js 到 dist-tmp 目录
     for (const d of fs.readdirSync(dir)) {
       if (/(\.css|\.umd\.min\.js)$/.test(d)) {
-        fs.outputFileSync(path.resolve(dir, /\.css$/.test(d) ? 'index.css' : 'index.js'), fs.readFileSync(path.resolve(dir, d), 'utf8'), 'utf8')
+        fs.outputFileSync(path.resolve(distTmp, /\.css$/.test(d) ? 'index.css' : 'index.js'), fs.readFileSync(path.resolve(dir, d), 'utf8'), 'utf8')
       }
-      await mySpawn('rm', ['-f', path.resolve(dir, d)], {
-        cwd: dir
-      })
     }
+    await doZip(cardName)
     // 打包到 zip
-    await mySpawn('zip', ['-qr', `${cardName}.zip`, './'], { cwd: dir })
-    await fs.move(path.join(dir, `${cardName}.zip`), path.join(zip, `${cardName}.zip`), { overwrite: true })
+    // await mySpawn('zip', ['-qr', `${cardName}.zip`, './'], { cwd: distTmp })
+    await fs.move(path.join(distTmp, `${cardName}.zip`), path.join(zip, `${cardName}.zip`), { overwrite: true })
   }
+}
+
+async function rmDir (dir) {
+  await mySpawn('rm', ['-rf', dir], {
+    cwd: process.cwd()
+  }).catch(err => {
+    console.log(`删除 ${dir} 目录失败！`, err)
+  })
 }
 
 function mySpawn (cmd, args, options = {}) {

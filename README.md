@@ -1,29 +1,33 @@
-# 卡片 your-card-name
+# 卡片集合工程
 
-在小程序里的使用方式
-
-```vue
-<template>
-  <xmcard-render name="your-card-name" :data="data" />
-</template>
-
-<script>
-export default {
-  created () {
-    xm.sourceCheck({ ids: ['your-card-name'] })
-  }
-}
-</script>
-```
-
-本地开发
+usage
 
 ```
 npm run serve
 ```
 
-打包卡片
+添加一个卡片
+
+```
+xmmp card test-123
+```
+
+会在 `src/card-collection` 目录下新建卡片目录 `test-123`
+
+打包单个卡片
+
+```
+npm run build test-123
+```
+
+批量打包
 
 ```
 npm run build
+```
+
+> tips: 如果项目不需要 eslint，编辑 vue.config.js，打开注释即可
+
+```js
+// chainWebpack: config => config.module.rules.delete('eslint')
 ```

@@ -27,10 +27,25 @@ function doZip (cardName) {
       })
     } else {
       console.log('🔧 使用 jszip 压缩...')
+      // const winZip = new JSZip()
+      // for (const f of fs.readdirSync(distTmp)) {
+      //   winZip.file(f, fs.readFileSync(path.resolve(distTmp, f)))
+      // }
       const winZip = new JSZip()
-      for (const f of fs.readdirSync(distTmp)) {
-        winZip.file(f, fs.readFileSync(path.resolve(distTmp, f)))
+      const deepFile = (dir, prefix = '') => {
+        for (const f of fs.readdirSync(dir)) {
+          // 判断 f 是文件还是文件夹
+          const current = path.resolve(dir, f)
+          const stat = fs.statSync(current)
+          if (stat.isFile()) {
+            winZip.file(prefix + f, fs.readFileSync(current))
+          } else if (stat.isDirectory()) {
+            // 文件夹
+            deepFile(path.join(dir, f), prefix + `${f}/`)
+          }
+        }
       }
+      deepFile(distTmp)
       winZip
         .generateNodeStream({ type: 'nodebuffer', streamFiles: true })
         .pipe(fs.createWriteStream(path.resolve(distTmp, `${cardName}.zip`)))

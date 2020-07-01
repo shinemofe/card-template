@@ -70,7 +70,10 @@ async function build () {
       )
       // 输出 index.css / index.js 到 dist-tmp 目录
       for (const d of fs.readdirSync(dir)) {
-        if (/(\.css|\.umd\.min\.js)$/.test(d)) {
+        const distStat = fs.statSync(path.resolve(dir, d))
+        if (distStat.isDirectory()) {
+          fs.copySync(path.resolve(dir, d), path.resolve(distTmp, d))
+        } else if (/(\.css|\.umd\.min\.js)$/.test(d)) {
           fs.outputFileSync(path.resolve(distTmp, /\.css$/.test(d) ? 'index.css' : 'index.js'), fs.readFileSync(path.resolve(dir, d), 'utf8'), 'utf8')
         }
       }

@@ -1,18 +1,13 @@
 {
   "name": "card-template",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "node build.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "cross-spawn": "^7.0.3",
-    "fs-extra": "^9.0.1",
-    "jszip": "^3.5.0",
-    "rimraf": "^3.0.2",
     "tcon": "^1.0.10",
     "vue": "^2.6.11"
   },

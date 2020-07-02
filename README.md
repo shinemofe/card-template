@@ -26,13 +26,13 @@ const componentName = 'test-123'
 - 打包单个卡片
 
 ```
-npm run build test-123
+xmmp build test-123
 ```
 
 - 批量打包
 
 ```
-npm run build
+xmmp build
 ```
 
 > tips: 如果项目不需要 eslint，编辑 vue.config.js，打开注释即可

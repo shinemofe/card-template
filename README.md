@@ -4,13 +4,13 @@
 
 请保持本地 xmmp-cli 为最新版本
 
-- usage
+###  Usage
 
 ```
 npm run serve
 ```
 
-- 添加一个卡片
+### 添加一个卡片
 
 ```
 xmmp card test-123
@@ -18,7 +18,7 @@ xmmp card test-123
 
 会在 `src/card-collection` 目录下新建卡片目录 `test-123`
 
-- 预览卡片
+### 预览卡片
 
 修改 `src/main.js` 中的组件名称
 
@@ -27,20 +27,20 @@ xmmp card test-123
 const componentName = 'test-123'
 ```
 
-- 打包单个卡片
+### 打包单个卡片
 
 ```
 xmmp build test-123
 ```
 
-- 打包 N 个卡片，N = 字符匹配数量
+### 打包 N 个卡片，N = 字符匹配数量
 
 ```
 # 匹配卡片名称包含 test- 的所有卡片
 xmmp build test- -r
 ```
 
-- 批量打包
+### 批量打包
 
 ```
 xmmp build

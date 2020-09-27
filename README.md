@@ -1,5 +1,9 @@
 # 卡片集合工程
 
+![](https://img.shields.io/npm/v/xmmp-cli.svg)
+
+请保持本地 xmmp-cli 为最新版本
+
 - usage
 
 ```
@@ -27,6 +31,13 @@ const componentName = 'test-123'
 
 ```
 xmmp build test-123
+```
+
+- 打包 N 个卡片，N = 字符匹配数量
+
+```
+# 匹配卡片名称包含 test- 的所有卡片
+xmmp build test- -r
 ```
 
 - 批量打包
